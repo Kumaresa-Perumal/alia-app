@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- ═══ PWA — Makes A.L.I.A installable ═══ -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="A.L.I.A"/>
+  <meta name="application-name" content="A.L.I.A"/>
+  <meta name="theme-color" content="#7c6ff7"/>
+  <meta name="msapplication-TileColor" content="#07080f"/>
+  <meta name="msapplication-TileImage" content="icons/icon-144.png"/>
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png"/>
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png"/>
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png"/>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png"/>
+  <link rel="icon" type="image/png" sizes="96x96" href="icons/icon-96.png"/>
+  <!-- SEO / Share -->
+  <meta name="description" content="A.L.I.A — Learn any language free. Native pronunciation, AI conversation, grammar videos. No streaks. Pure learning."/>
+  <meta property="og:title" content="A.L.I.A — Adaptive Language Intelligence Assistant"/>
+  <meta property="og:description" content="Free language learning app powered by AI. Native audio, grammar videos, AI conversation."/>
+  <meta property="og:type" content="website"/>
+
+  <title>A.L.I.A — Adaptive Language Intelligence Assistant</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --void: #07080f;
+  --deep: #0d0f1e;
+  --surface: #13152a;
+  --raised: #1a1d35;
+  --border: #252848;
+  --muted: #4a4f7a;
+  --soft: #8b90c0;
+  --text: #e8eaf6;
+  --bright: #ffffff;
+  --iris: #7c6ff7;
+  --iris-glow: rgba(124,111,247,0.25);
+  --aurora: #00e5c0;
+  --aurora-glow: rgba(0,229,192,0.2);
+  --rose: #ff6b9d;
+  --gold: #f5c842;
+  --sky: #4fc3f7;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'Space Grotesk',sans-serif;
+  background:var(--void);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ══════════════════════════════════════════
+   LANDING
+══════════════════════════════════════════ */
+#s-landing{
+  background:var(--void);
+  position:relative;
+  overflow:hidden;
+}
+
+/* Signature element: orbiting language glyphs ring */
+.glyph-ring{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:700px;height:700px;
+  border-radius:50%;
+  border:1px solid rgba(124,111,247,0.08);
+  pointer-events:none;
+  animation:ringRotate 60s linear infinite;
+}
+.glyph-ring-2{
+  width:500px;height:500px;
+  border-color:rgba(0,229,192,0.06);
+  animation:ringRotate 40s linear infinite reverse;
+}
+.glyph-ring-3{
+  width:320px;height:320px;
+  border-color:rgba(124,111,247,0.12);
+  animation:ringRotate 25s linear infinite;
+}
+@keyframes ringRotate{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+.glyph{
+  position:absolute;
+  font-size:1.1rem;
+  opacity:0.35;
+  color:var(--iris);
+  top:50%;left:50%;
+  transform-origin:0 0;
+}
+
+/* Ambient glow behind hero */
+.hero-glow{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;
+}
+.glow-iris{width:600px;height:400px;background:rgba(124,111,247,0.12);top:-80px;left:50%;transform:translateX(-50%);}
+.glow-aurora{width:400px;height:300px;background:rgba(0,229,192,0.07);bottom:100px;right:-80px;}
+
+/* Nav */
+.land-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 48px;position:relative;z-index:10;
+}
+.alia-logo{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:1.3rem;
+  letter-spacing:0.18em;
+  color:var(--bright);
+}
+.alia-logo span{
+  background:linear-gradient(90deg,var(--iris),var(--aurora));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nav-pill{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:8px 20px;
+  font-size:0.8rem;font-weight:600;
+  color:var(--soft);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.nav-pill:hover{background:var(--iris);border-color:var(--iris);color:#fff;}
+
+/* Hero */
+.hero-center{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:60px 24px 40px;
+  position:relative;z-index:5;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(124,111,247,0.12);
+  border:1px solid rgba(124,111,247,0.3);
+  border-radius:100px;padding:6px 16px;
+  font-size:0.72rem;font-weight:600;
+  color:var(--iris);letter-spacing:0.12em;
+  text-transform:uppercase;margin-bottom:28px;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--aurora);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+.hero-h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  font-weight:700;line-height:1.08;
+  letter-spacing:-0.02em;
+  color:var(--bright);
+  margin-bottom:10px;
+}
+.hero-h1 em{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--iris),var(--aurora));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-acronym{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;font-weight:600;
+  letter-spacing:0.3em;color:var(--muted);
+  margin-bottom:24px;text-transform:uppercase;
+}
+.hero-sub{
+  font-size:1.05rem;font-weight:400;
+  color:var(--soft);max-width:540px;
+  line-height:1.75;margin-bottom:44px;
+}
+.hero-sub strong{color:var(--aurora);font-weight:600;}
+
+.hero-cta-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:60px;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  border:none;border-radius:14px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.92rem;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+  text-decoration:none;padding:14px 28px;
+}
+.btn-iris{
+  background:linear-gradient(135deg,var(--iris),#9c8fff);
+  color:#fff;
+  box-shadow:0 8px 32px rgba(124,111,247,0.35);
+}
+.btn-iris:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(124,111,247,0.5);}
+.btn-ghost{
+  background:transparent;
+  border:1.5px solid var(--border);
+  color:var(--soft);
+}
+.btn-ghost:hover{border-color:var(--iris);color:var(--iris);}
+.btn-aurora{
+  background:linear-gradient(135deg,var(--aurora),#00b89c);
+  color:var(--void);font-weight:700;
+}
+.btn-aurora:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,229,192,0.35);}
+.btn-sm{padding:10px 18px;font-size:0.82rem;border-radius:10px;}
+.btn-outline-iris{background:transparent;border:1.5px solid var(--iris);color:var(--iris);}
+.btn-outline-iris:hover{background:var(--iris);color:#fff;}
+
+/* Pillars */
+.pillars{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px;padding:0 48px 80px;
+  max-width:1200px;width:100%;margin:0 auto;
+  position:relative;z-index:5;
+}
+.pillar{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;padding:24px 20px;
+  transition:all 0.25s;
+}
+.pillar:hover{border-color:var(--iris);transform:translateY(-4px);box-shadow:0 16px 40px rgba(124,111,247,0.12);}
+.pillar-icon{font-size:1.8rem;margin-bottom:14px;}
+.pillar h3{font-size:0.9rem;font-weight:700;color:var(--bright);margin-bottom:8px;}
+.pillar p{font-size:0.78rem;color:var(--soft);line-height:1.65;}
+.pillar-tag{
+  display:inline-block;margin-top:12px;
+  font-size:0.68rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+}
+.tag-iris{background:rgba(124,111,247,0.15);color:var(--iris);}
+.tag-aurora{background:rgba(0,229,192,0.12);color:var(--aurora);}
+.tag-rose{background:rgba(255,107,157,0.12);color:var(--rose);}
+.tag-gold{background:rgba(245,200,66,0.12);color:var(--gold);}
+
+/* ══════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════ */
+#s-app{
+  background:var(--void);
+  max-width:430px;
+  width:100%;
+  margin:0 auto;
+  box-shadow:0 0 100px rgba(0,0,0,0.6);
+  position:relative;
+  min-height:100vh;
+}
+
+.app-topbar{
+  background:var(--deep);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.app-logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;letter-spacing:0.14em;color:var(--bright);}
+.app-logo span{background:linear-gradient(90deg,var(--iris),var(--aurora));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.level-chip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:100px;padding:5px 12px;
+  font-size:0.75rem;font-weight:600;color:var(--soft);
+}
+.level-dot{width:7px;height:7px;border-radius:50%;background:var(--aurora);}
+
+/* Bottom nav */
+.app-nav{
+  display:flex;
+  background:var(--deep);
+  border-top:1px solid var(--border);
+  position:sticky;bottom:0;z-index:50;
+}
+.anav-btn{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:3px;
+  padding:10px 0 8px;
+  border:none;background:transparent;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.64rem;font-weight:500;
+  color:var(--muted);cursor:pointer;
+  transition:color 0.15s;
+}
+.anav-btn .ni{font-size:1.2rem;}
+.anav-btn.on{color:var(--iris);}
+
+/* Tab pages */
+.tpage{display:none;padding:18px;overflow-y:auto;flex:1;}
+.tpage.on{display:block;}
+
+/* ── HOME TAB ── */
+.welcome-card{
+  background:linear-gradient(135deg,var(--surface),var(--raised));
+  border:1px solid var(--border);
+  border-radius:22px;padding:22px;
+  margin-bottom:18px;
+  position:relative;overflow:hidden;
+}
+.welcome-card::before{
+  content:'';position:absolute;
+  top:-60px;right:-60px;
+  width:180px;height:180px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(124,111,247,0.2),transparent 70%);
+}
+.wc-label{font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--iris);margin-bottom:6px;}
+.wc-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--bright);margin-bottom:4px;}
+.wc-sub{font-size:0.8rem;color:var(--soft);margin-bottom:18px;line-height:1.55;}
+.wc-lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.lang-flag{
+  display:flex;align-items:center;gap:7px;
+  background:var(--raised);border:1px solid var(--border);
+  border-radius:10px;padding:8px 14px;
+  font-size:0.82rem;font-weight:600;color:var(--text);
+  cursor:pointer;transition:all 0.15s;
+}
+.lang-flag:hover,.lang-flag.picked{border-color:var(--iris);background:rgba(124,111,247,0.12);color:var(--iris);}
+
+/* Section head */
+.sec-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:20px 0 12px;
+}
+.sec-head h3{font-size:0.9rem;font-weight:700;color:var(--bright);}
+.sec-head a{font-size:0.75rem;color:var(--iris);cursor:pointer;font-weight:600;}
+
+/* Module cards */
+.mod-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:16px;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all 0.18s;
+  margin-bottom:10px;
+}
+.mod-card:hover{border-color:var(--iris);transform:translateX(4px);box-shadow:0 6px 24px rgba(124,111,247,0.1);}
+.mod-icon{
+  width:50px;height:50px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+}
+.mod-body{flex:1;min-width:0;}
+.mod-title{font-weight:700;font-size:0.88rem;color:var(--bright);}
+.mod-meta{font-size:0.73rem;color:var(--soft);margin-top:3px;}
+.mod-tags{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
+.mtag{font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:0.05em;}
+.mod-arrow{color:var(--muted);font-size:1rem;}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.stat-c{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:14px 10px;text-align:center;
+}
+.stat-c .sv{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:600;color:var(--bright);}
+.stat-c .sl{font-size:0.68rem;color:var(--muted);margin-top:3px;font-weight:500;}
+
+/* ── GRAMMAR TAB ── */
+.grammar-hero{
+  background:linear-gradient(135deg,rgba(124,111,247,0.15),rgba(124,111,247,0.05));
+  border:1px solid rgba(124,111,247,0.25);
+  border-radius:22px;padding:22px;margin-bottom:18px;
+}
+.gh-label{font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--iris);margin-bottom:6px;}
+.gh-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--bright);margin-bottom:6px;}
+.gh-sub{font-size:0.8rem;color:var(--soft);line-height:1.6;margin-bottom:16px;}
+
+/* Video card (simulated) */
+.video-card{
+  background:var(--void);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;margin-bottom:12px;
+  cursor:pointer;transition:all 0.2s;
+}
+.video-card:hover{border-color:var(--iris);box-shadow:0 8px 30px rgba(124,111,247,0.15);}
+.video-thumb{
+  width:100%;height:140px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;position:relative;
+}
+.vt-play{
+  position:absolute;
+  width:52px;height:52px;
+  border-radius:50%;
+  background:rgba(124,111,247,0.9);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  box-shadow:0 4px 20px rgba(124,111,247,0.5);
+  transition:transform 0.2s;
+}
+.video-card:hover .vt-play{transform:scale(1.1);}
+.video-info{padding:14px 16px;}
+.vi-type{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--iris);margin-bottom:4px;}
+.vi-title{font-weight:700;font-size:0.88rem;color:var(--bright);margin-bottom:4px;}
+.vi-meta{font-size:0.72rem;color:var(--muted);}
+
+/* Grammar lesson card */
+.gram-lesson{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:18px;margin-bottom:12px;
+}
+.gl-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.gl-title{font-weight:700;font-size:0.92rem;color:var(--bright);}
+.gl-badge{font-size:0.65rem;font-weight:700;padding:3px 10px;border-radius:100px;}
+
+/* Rule box */
+.rule-box{
+  background:var(--raised);border-left:3px solid var(--iris);
+  border-radius:0 12px 12px 0;padding:14px 16px;margin:10px 0;
+}
+.rb-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--iris);margin-bottom:6px;}
+.rb-rule{font-size:0.85rem;color:var(--text);line-height:1.6;}
+.rb-rule code{
+  font-family:'JetBrains Mono',monospace;
+  background:rgba(124,111,247,0.15);
+  color:var(--iris);padding:2px 6px;border-radius:5px;font-size:0.82rem;
+}
+
+/* English compare */
+.eng-compare{
+  background:rgba(0,229,192,0.07);
+  border:1px solid rgba(0,229,192,0.2);
+  border-radius:12px;padding:14px 16px;margin-top:12px;
+}
+.ec-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--aurora);margin-bottom:10px;}
+.ec-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.ec-row:last-child{margin-bottom:0;}
+.ec-lang{font-size:0.72rem;font-weight:700;color:var(--muted);width:60px;flex-shrink:0;padding-top:2px;}
+.ec-text{font-size:0.82rem;color:var(--text);line-height:1.5;}
+.ec-text em{color:var(--aurora);font-style:normal;font-weight:600;}
+
+/* ── VOCABULARY TAB ── */
+.vocab-hero{
+  background:linear-gradient(135deg,rgba(0,229,192,0.12),rgba(0,229,192,0.03));
+  border:1px solid rgba(0,229,192,0.2);
+  border-radius:22px;padding:22px;margin-bottom:18px;
+}
+.vh-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--bright);margin-bottom:6px;}
+.vh-sub{font-size:0.8rem;color:var(--soft);line-height:1.6;margin-bottom:14px;}
+
+/* Vocab video card */
+.vv-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;margin-bottom:12px;
+  cursor:pointer;transition:all 0.2s;
+}
+.vv-card:hover{border-color:var(--aurora);}
+.vv-thumb{
+  width:100%;height:120px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;gap:20px;
+}
+.vv-word-display{
+  text-align:center;
+}
+.vvw-target{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--bright);}
+.vvw-arrow{font-size:1rem;color:var(--muted);margin:2px 0;}
+.vvw-english{font-size:0.85rem;color:var(--aurora);}
+.vv-play{
+  position:absolute;top:10px;right:12px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(0,229,192,0.2);border:1px solid rgba(0,229,192,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;color:var(--aurora);
+}
+.vv-info{padding:12px 16px;border-top:1px solid var(--border);}
+.vv-info-row{display:flex;align-items:center;justify-content:space-between;}
+.vvi-word{font-weight:700;font-size:0.88rem;color:var(--bright);}
+.vvi-type{font-size:0.7rem;color:var(--muted);}
+.vv-examples{margin-top:10px;}
+.vve-title{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:6px;}
+.vve-row{display:flex;flex-direction:column;gap:2px;margin-bottom:7px;}
+.vve-native{font-size:0.82rem;color:var(--text);}
+.vve-english{font-size:0.75rem;color:var(--aurora);}
+
+/* Filter row */
+.filter-row{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;}
+.filter-row::-webkit-scrollbar{display:none;}
+.fbtn{
+  flex-shrink:0;padding:6px 14px;
+  border-radius:100px;border:1.5px solid var(--border);
+  background:transparent;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.75rem;font-weight:600;
+  color:var(--muted);cursor:pointer;transition:all 0.15s;
+}
+.fbtn.on{background:var(--iris);border-color:var(--iris);color:#fff;}
+
+/* ── AI CONVERSATION TAB ── */
+.chat-header{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;padding:16px;
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:16px;
+}
+.alia-avatar{
+  width:48px;height:48px;border-radius:16px;
+  background:linear-gradient(135deg,var(--iris),var(--aurora));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+  position:relative;
+}
+.avatar-pulse{
+  position:absolute;bottom:3px;right:3px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--aurora);
+  box-shadow:0 0 0 0 rgba(0,229,192,0.4);
+  animation:avatarPulse 2s ease infinite;
+}
+@keyframes avatarPulse{0%{box-shadow:0 0 0 0 rgba(0,229,192,0.4);}70%{box-shadow:0 0 0 8px rgba(0,229,192,0);}100%{box-shadow:0 0 0 0 rgba(0,229,192,0);}}
+.chat-header-info h3{font-size:0.92rem;font-weight:700;color:var(--bright);}
+.chat-header-info p{font-size:0.75rem;color:var(--soft);margin-top:2px;}
+
+/* Chat messages */
+.chat-messages{
+  display:flex;flex-direction:column;gap:14px;
+  margin-bottom:16px;
+  max-height:340px;overflow-y:auto;
+  padding-right:4px;
+}
+.chat-messages::-webkit-scrollbar{width:3px;}
+.chat-messages::-webkit-scrollbar-track{background:transparent;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+.msg{display:flex;gap:10px;align-items:flex-end;}
+.msg.me{flex-direction:row-reverse;}
+.msg-avatar{
+  width:30px;height:30px;border-radius:10px;
+  background:linear-gradient(135deg,var(--iris),var(--aurora));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;flex-shrink:0;
+}
+.msg-bubble{
+  max-width:78%;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px 18px 18px 4px;
+  padding:12px 14px;
+}
+.msg.me .msg-bubble{
+  background:rgba(124,111,247,0.2);border-color:rgba(124,111,247,0.35);
+  border-radius:18px 18px 4px 18px;
+}
+.mb-text{font-size:0.85rem;color:var(--text);line-height:1.6;}
+.mb-translation{
+  font-size:0.72rem;color:var(--aurora);
+  margin-top:6px;padding-top:6px;
+  border-top:1px solid rgba(0,229,192,0.15);
+}
+.mb-tip{
+  font-size:0.72rem;color:var(--gold);
+  margin-top:6px;background:rgba(245,200,66,0.08);
+  padding:6px 8px;border-radius:8px;
+}
+.msg-time{font-size:0.62rem;color:var(--muted);margin-top:4px;text-align:right;}
+
+/* Typing indicator */
+.typing-indicator{display:none;}
+.typing-indicator.show{display:flex;}
+.typing-dots span{
+  display:inline-block;width:6px;height:6px;
+  border-radius:50%;background:var(--muted);
+  margin:0 2px;animation:typingBounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2){animation-delay:0.2s;}
+.typing-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-8px);}}
+
+/* Chat input */
+.chat-input-area{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:16px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  transition:border-color 0.2s;
+}
+.chat-input-area:focus-within{border-color:var(--iris);}
+.chat-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.88rem;color:var(--text);
+  resize:none;
+}
+.chat-input::placeholder{color:var(--muted);}
+.send-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--iris);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1rem;
+  transition:all 0.15s;flex-shrink:0;
+}
+.send-btn:hover{background:#9c8fff;transform:scale(1.05);}
+
+/* Quick prompts */
+.quick-prompts{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
+.qp-btn{
+  padding:6px 12px;border-radius:100px;
+  border:1px solid var(--border);background:var(--raised);
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.72rem;font-weight:500;color:var(--soft);
+  cursor:pointer;transition:all 0.15s;
+}
+.qp-btn:hover{border-color:var(--iris);color:var(--iris);}
+
+/* Lang selector for chat */
+.chat-lang-row{
+  display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;
+}
+.cl-btn{
+  padding:7px 14px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--raised);
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.78rem;font-weight:600;color:var(--soft);
+  cursor:pointer;transition:all 0.15s;
+}
+.cl-btn.on{border-color:var(--iris);background:rgba(124,111,247,0.12);color:var(--iris);}
+
+/* ── DIALOGUE/VIDEO TAB ── */
+.dialogue-intro{
+  background:linear-gradient(135deg,rgba(255,107,157,0.1),rgba(255,107,157,0.03));
+  border:1px solid rgba(255,107,157,0.2);
+  border-radius:22px;padding:20px;margin-bottom:18px;
+}
+.di-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--rose);margin-bottom:6px;}
+.di-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--bright);margin-bottom:6px;}
+.di-sub{font-size:0.78rem;color:var(--soft);line-height:1.6;}
+
+.dialogue-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:18px;margin-bottom:12px;
+  cursor:pointer;transition:all 0.2s;
+}
+.dialogue-card:hover{border-color:var(--rose);box-shadow:0 6px 24px rgba(255,107,157,0.1);}
+.dc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.dc-topic{font-weight:700;font-size:0.9rem;color:var(--bright);}
+.dc-level{font-size:0.65rem;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(255,107,157,0.12);color:var(--rose);}
+
+/* Dialogue lines */
+.dialogue-lines{display:flex;flex-direction:column;gap:8px;}
+.dl-line{display:flex;gap:10px;align-items:flex-start;}
+.dl-speaker{
+  font-size:0.65rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;
+  width:50px;flex-shrink:0;
+  padding-top:3px;
+}
+.dl-sp-a{color:var(--iris);}
+.dl-sp-b{color:var(--rose);}
+.dl-content{flex:1;}
+.dl-text{font-size:0.82rem;color:var(--text);line-height:1.55;}
+.dl-eng{font-size:0.73rem;color:var(--aurora);margin-top:2px;font-style:italic;}
+
+.dc-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--border);
+}
+.dc-tags{display:flex;gap:5px;}
+.dc-watch-btn{
+  padding:7px 14px;border-radius:10px;
+  border:1.5px solid var(--iris);background:transparent;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.75rem;font-weight:600;color:var(--iris);
+  cursor:pointer;transition:all 0.15s;
+}
+.dc-watch-btn:hover{background:var(--iris);color:#fff;}
+
+/* ══════════════════════════════════════════
+   GRAMMAR LESSON DETAIL SCREEN
+══════════════════════════════════════════ */
+#s-grammar{
+  background:var(--void);
+  max-width:430px;width:100%;
+  margin:0 auto;
+  box-shadow:0 0 100px rgba(0,0,0,0.6);
+  min-height:100vh;
+}
+.lesson-header{
+  background:var(--deep);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:40;
+}
+.back-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1rem;color:var(--soft);
+  transition:all 0.15s;
+}
+.back-btn:hover{border-color:var(--iris);color:var(--iris);}
+.lesson-header-info h3{font-size:0.9rem;font-weight:700;color:var(--bright);}
+.lesson-header-info p{font-size:0.72rem;color:var(--muted);}
+
+.lesson-body{padding:18px;overflow-y:auto;}
+
+/* Animated video placeholder */
+.grammar-video{
+  width:100%;height:200px;
+  background:linear-gradient(135deg,var(--raised),var(--surface));
+  border:1px solid var(--border);
+  border-radius:20px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:12px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.gv-animation{
+  display:flex;gap:6px;align-items:flex-end;
+}
+.gv-bar{
+  width:4px;border-radius:4px;
+  background:var(--iris);
+  animation:barWave 1s ease infinite;
+}
+.gv-bar:nth-child(1){height:20px;animation-delay:0s;}
+.gv-bar:nth-child(2){height:35px;animation-delay:0.1s;}
+.gv-bar:nth-child(3){height:25px;animation-delay:0.2s;}
+.gv-bar:nth-child(4){height:40px;animation-delay:0.3s;}
+.gv-bar:nth-child(5){height:28px;animation-delay:0.4s;}
+.gv-bar:nth-child(6){height:16px;animation-delay:0.5s;}
+@keyframes barWave{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.4);}}
+.gv-label{font-size:0.8rem;font-weight:600;color:var(--soft);}
+.gv-sublabel{font-size:0.68rem;color:var(--muted);}
+.gv-playing-badge{
+  position:absolute;top:12px;right:12px;
+  background:rgba(124,111,247,0.2);border:1px solid rgba(124,111,247,0.4);
+  border-radius:100px;padding:4px 10px;
+  font-size:0.65rem;font-weight:700;color:var(--iris);letter-spacing:0.08em;
+}
+
+/* Explanation sections */
+.exp-section{margin-bottom:20px;}
+.exp-title{
+  font-size:0.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--iris);margin-bottom:10px;
+}
+.exp-text{font-size:0.85rem;color:var(--soft);line-height:1.7;}
+.exp-text strong{color:var(--text);}
+
+/* Structure diagram */
+.structure-diagram{
+  background:var(--raised);border-radius:14px;
+  padding:16px;margin:12px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;
+}
+.sd-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sd-row:last-child{margin-bottom:0;}
+.sd-label{color:var(--muted);width:90px;flex-shrink:0;font-size:0.72rem;}
+.sd-value{color:var(--text);}
+.sd-highlight{color:var(--iris);}
+.sd-eng{color:var(--aurora);margin-left:auto;font-size:0.72rem;}
+
+/* Example box */
+.example-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:16px;margin:10px 0;
+}
+.ex-target{font-size:1rem;font-weight:600;color:var(--bright);margin-bottom:6px;}
+.ex-romaji{font-size:0.78rem;color:var(--muted);font-style:italic;margin-bottom:6px;}
+.ex-english{font-size:0.85rem;color:var(--aurora);}
+.ex-breakdown{
+  margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.ex-part{
+  background:var(--raised);border-radius:8px;
+  padding:5px 10px;text-align:center;
+  border:1px solid var(--border);
+}
+.ep-word{font-size:0.78rem;font-weight:600;color:var(--text);}
+.ep-role{font-size:0.62rem;color:var(--iris);margin-top:2px;}
+
+/* English compare full */
+.compare-section{
+  background:rgba(0,229,192,0.06);
+  border:1px solid rgba(0,229,192,0.18);
+  border-radius:18px;padding:18px;margin:16px 0;
+}
+.cs-title{
+  font-size:0.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--aurora);margin-bottom:14px;
+}
+.cs-compare-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:12px;
+}
+.csr-box{background:var(--raised);border-radius:12px;padding:12px;}
+.csr-lang{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.csr-eng .csr-lang{color:var(--sky);}
+.csr-target .csr-lang{color:var(--iris);}
+.csr-item{font-size:0.8rem;color:var(--text);margin-bottom:5px;line-height:1.5;}
+.csr-note{
+  font-size:0.75rem;color:var(--gold);
+  background:rgba(245,200,66,0.08);
+  border-radius:8px;padding:8px 10px;
+  margin-top:10px;line-height:1.5;
+}
+
+/* Next lesson btn */
+.next-lesson-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--iris),#9c8fff);
+  color:#fff;font-family:'Space Grotesk',sans-serif;
+  font-size:0.92rem;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 24px rgba(124,111,247,0.3);
+  margin-top:8px;transition:all 0.2s;
+}
+.next-lesson-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,111,247,0.45);}
+
+/* ══════════════════════════════════════════
+   LANGUAGE PICKER SCREEN
+══════════════════════════════════════════ */
+#s-langpick{
+  background:var(--void);
+  max-width:430px;width:100%;
+  margin:0 auto;
+  box-shadow:0 0 100px rgba(0,0,0,0.6);
+  min-height:100vh;
+}
+.lp-header{
+  background:var(--deep);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:40;
+}
+.lp-body{padding:18px;}
+.lp-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--bright);margin-bottom:6px;}
+.lp-sub{font-size:0.82rem;color:var(--soft);line-height:1.6;margin-bottom:20px;}
+
+.lang-search{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+  transition:border-color 0.2s;
+}
+.lang-search:focus-within{border-color:var(--iris);}
+.lang-search input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.88rem;color:var(--text);
+}
+.lang-search input::placeholder{color:var(--muted);}
+
+.lang-region{margin-bottom:20px;}
+.lr-title{
+  font-size:0.68rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--muted);margin-bottom:10px;
+}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lang-item{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:14px 12px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:all 0.18s;
+}
+.lang-item:hover,.lang-item.selected{
+  border-color:var(--iris);
+  background:rgba(124,111,247,0.1);
+}
+.li-flag{font-size:1.3rem;}
+.li-info{flex:1;min-width:0;}
+.li-name{font-size:0.83rem;font-weight:700;color:var(--bright);}
+.li-native{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+.li-check{font-size:0.9rem;color:var(--iris);opacity:0;transition:opacity 0.15s;}
+.lang-item.selected .li-check{opacity:1;}
+
+.start-lang-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--iris),var(--aurora));
+  color:var(--void);font-family:'Space Grotesk',sans-serif;
+  font-size:0.95rem;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 24px rgba(0,229,192,0.25);
+  margin-top:8px;transition:all 0.2s;
+}
+.start-lang-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,229,192,0.4);}
+
+/* ══════════════════════════════════════════
+   ANIMATIONS & UTILS
+══════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp 0.35s ease forwards;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+/* Responsive */
+@media(max-width:520px){
+  .pillars{grid-template-columns:1fr 1fr;padding:0 20px 60px;}
+  .land-nav{padding:16px 20px;}
+  .hero-center{padding:40px 20px 30px;}
+}
+@media(max-width:360px){
+  .pillars{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+  <!-- ═══ Android Install Banner ═══ -->
+  <div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+    background:#13152a;border-top:1px solid #252848;padding:14px 18px;
+    align-items:center;justify-content:space-between;gap:12px;
+    box-shadow:0 -8px 32px rgba(0,0,0,0.5);">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="icons/icon-96.png" style="width:44px;height:44px;border-radius:12px;" alt="A.L.I.A"/>
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.88rem;color:#fff;">Install A.L.I.A</div>
+        <div style="font-size:0.72rem;color:#8b90c0;margin-top:2px;">Add to home screen · Works offline</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="dismissBanner()" style="padding:8px 14px;border-radius:10px;border:1.5px solid #252848;background:transparent;color:#8b90c0;font-family:'Space Grotesk',sans-serif;font-size:0.78rem;cursor:pointer;">Not now</button>
+      <button onclick="installApp()" style="padding:8px 16px;border-radius:10px;border:none;background:linear-gradient(135deg,#7c6ff7,#00e5c0);color:#07080f;font-family:'Space Grotesk',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">Install ↓</button>
+    </div>
+  </div>
+
+  <!-- ═══ iOS Install Banner ═══ -->
+  <div id="iosBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+    background:#13152a;border-top:1px solid #252848;padding:16px 18px;
+    flex-direction:column;gap:10px;
+    box-shadow:0 -8px 32px rgba(0,0,0,0.5);">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:0.9rem;">📲 Install A.L.I.A on iPhone</div>
+      <button onclick="document.getElementById('iosBanner').style.display='none'" style="background:transparent;border:none;color:#8b90c0;font-size:1.2rem;cursor:pointer;">✕</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:#1a1d35;border-radius:12px;padding:12px;">
+      <div style="font-size:1.4rem;">1️⃣</div>
+      <div style="font-size:0.8rem;color:#e8eaf6;">Tap the <strong style="color:#7c6ff7;">Share button</strong> <span style="font-size:1rem;">⬆</span> at the bottom of Safari</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:#1a1d35;border-radius:12px;padding:12px;">
+      <div style="font-size:1.4rem;">2️⃣</div>
+      <div style="font-size:0.8rem;color:#e8eaf6;">Scroll down and tap <strong style="color:#00e5c0;">"Add to Home Screen"</strong></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:#1a1d35;border-radius:12px;padding:12px;">
+      <div style="font-size:1.4rem;">3️⃣</div>
+      <div style="font-size:0.8rem;color:#e8eaf6;">Tap <strong style="color:#00e5c0;">"Add"</strong> — A.L.I.A appears on your home screen!</div>
+    </div>
+  </div>
+
+
+<!-- ══════════════════════════════════════════
+     LANDING SCREEN
+══════════════════════════════════════════ -->
+<div class="screen active" id="s-landing">
+  <!-- Ambient -->
+  <div class="hero-glow glow-iris"></div>
+  <div class="hero-glow glow-aurora"></div>
+
+  <!-- Orbiting glyph ring (signature element) -->
+  <div class="glyph-ring" id="ring1"></div>
+  <div class="glyph-ring glyph-ring-2" id="ring2"></div>
+  <div class="glyph-ring glyph-ring-3" id="ring3"></div>
+
+  <!-- Nav -->
+  <nav class="land-nav">
+    <div class="alia-logo"><span>A.L.I.A</span></div>
+    <div style="display:flex;gap:10px;">
+      <button class="nav-pill" onclick="goScreen('s-langpick')">🌍 Choose Language</button>
+      <button class="nav-pill" onclick="goScreen('s-app')" style="background:var(--iris);border-color:var(--iris);color:#fff;">Open App →</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero-center">
+    <div class="hero-badge"><span class="badge-dot"></span>Free Forever · No Streaks · Pure Learning</div>
+    <h1 class="hero-h1">Learn any language<br/><em>the way it lives</em></h1>
+    <p class="hero-acronym">Adaptive · Language · Intelligence · Assistant</p>
+    <p class="hero-sub">
+      A.L.I.A speaks to you in <strong>native voices</strong>, explains grammar through <strong>real comparison to English</strong>, and converses with you like a <strong>patient human tutor</strong> — completely free, forever.
+    </p>
+    <div class="hero-cta-row">
+      <button class="btn btn-iris" onclick="goScreen('s-langpick')">🌍 Pick Your Language</button>
+      <button class="btn btn-ghost" onclick="goScreen('s-app')">Explore the App</button>
+    </div>
+  </div>
+
+  <!-- Pillars -->
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">🎙️</div>
+      <h3>Native Pronunciation</h3>
+      <p>Every word spoken by verified native speakers. Hear real accents, real rhythm, real music of the language.</p>
+      <span class="pillar-tag tag-iris">Audio · Phonetics</span>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📐</div>
+      <h3>Grammar + English Compare</h3>
+      <p>Deep grammar lessons with side-by-side English comparison at the end of every session so it all makes sense.</p>
+      <span class="pillar-tag tag-aurora">Grammar · Structure</span>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🤖</div>
+      <h3>AI Conversation</h3>
+      <p>Talk to A.L.I.A in real sentences. She corrects you gently, teaches vocabulary in context, like a real tutor.</p>
+      <span class="pillar-tag tag-rose">AI · Dialogue</span>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🎬</div>
+      <h3>Learning Videos</h3>
+      <p>Grammar, vocabulary and dialogue videos — visual, animated, context-rich. Watch the language come alive.</p>
+      <span class="pillar-tag tag-gold">Video · Visual</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     LANGUAGE PICKER SCREEN
+══════════════════════════════════════════ -->
+<div class="screen" id="s-langpick">
+  <div style="display:flex;flex-direction:column;flex:1;max-width:430px;width:100%;margin:0 auto;box-shadow:0 0 100px rgba(0,0,0,0.6);background:var(--void);min-height:100vh;">
+    <div class="lp-header">
+      <button class="back-btn" onclick="goScreen('s-landing')">‹</button>
+      <div>
+        <div style="font-family:'Space Grotesk';font-weight:700;font-size:0.95rem;color:var(--bright);">Choose Your Language</div>
+        <div style="font-size:0.72rem;color:var(--muted);">30+ languages · All free</div>
+      </div>
+    </div>
+    <div class="lp-body" style="overflow-y:auto;flex:1;">
+      <p class="lp-title">What do you want to learn?</p>
+      <p class="lp-sub">A.L.I.A adapts to your pace and native language. Select the language you want to learn and we'll set everything up for you.</p>
+
+      <div class="lang-search">
+        <span style="color:var(--muted);">🔍</span>
+        <input type="text" placeholder="Search languages..." oninput="filterLangs(this.value)"/>
+      </div>
+
+      <div class="lang-region" id="lang-europe">
+        <div class="lr-title">Europe</div>
+        <div class="lang-grid">
+          <div class="lang-item" onclick="pickLang(this,'German','Deutsch','🇩🇪')">
+            <div class="li-flag">🇩🇪</div>
+            <div class="li-info"><div class="li-name">German</div><div class="li-native">Deutsch</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'French','Français','🇫🇷')">
+            <div class="li-flag">🇫🇷</div>
+            <div class="li-info"><div class="li-name">French</div><div class="li-native">Français</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Spanish','Español','🇪🇸')">
+            <div class="li-flag">🇪🇸</div>
+            <div class="li-info"><div class="li-name">Spanish</div><div class="li-native">Español</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Italian','Italiano','🇮🇹')">
+            <div class="li-flag">🇮🇹</div>
+            <div class="li-info"><div class="li-name">Italian</div><div class="li-native">Italiano</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Portuguese','Português','🇵🇹')">
+            <div class="li-flag">🇵🇹</div>
+            <div class="li-info"><div class="li-name">Portuguese</div><div class="li-native">Português</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Russian','Русский','🇷🇺')">
+            <div class="li-flag">🇷🇺</div>
+            <div class="li-info"><div class="li-name">Russian</div><div class="li-native">Русский</div></div>
+            <div class="li-check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lang-region" id="lang-asia">
+        <div class="lr-title">Asia</div>
+        <div class="lang-grid">
+          <div class="lang-item" onclick="pickLang(this,'Japanese','日本語','🇯🇵')">
+            <div class="li-flag">🇯🇵</div>
+            <div class="li-info"><div class="li-name">Japanese</div><div class="li-native">日本語</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Mandarin','普通话','🇨🇳')">
+            <div class="li-flag">🇨🇳</div>
+            <div class="li-info"><div class="li-name">Mandarin</div><div class="li-native">普通话</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Korean','한국어','🇰🇷')">
+            <div class="li-flag">🇰🇷</div>
+            <div class="li-info"><div class="li-name">Korean</div><div class="li-native">한국어</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Hindi','हिन्दी','🇮🇳')">
+            <div class="li-flag">🇮🇳</div>
+            <div class="li-info"><div class="li-name">Hindi</div><div class="li-native">हिन्दी</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Arabic','العربية','🇸🇦')">
+            <div class="li-flag">🇸🇦</div>
+            <div class="li-info"><div class="li-name">Arabic</div><div class="li-native">العربية</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Turkish','Türkçe','🇹🇷')">
+            <div class="li-flag">🇹🇷</div>
+            <div class="li-info"><div class="li-name">Turkish</div><div class="li-native">Türkçe</div></div>
+            <div class="li-check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lang-region">
+        <div class="lr-title">Americas & Africa</div>
+        <div class="lang-grid">
+          <div class="lang-item" onclick="pickLang(this,'Swahili','Kiswahili','🇰🇪')">
+            <div class="li-flag">🇰🇪</div>
+            <div class="li-info"><div class="li-name">Swahili</div><div class="li-native">Kiswahili</div></div>
+            <div class="li-check">✓</div>
+          </div>
+          <div class="lang-item" onclick="pickLang(this,'Dutch','Nederlands','🇳🇱')">
+            <div class="li-flag">🇳🇱</div>
+            <div class="li-info"><div class="li-name">Dutch</div><div class="li-native">Nederlands</div></div>
+            <div class="li-check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="start-lang-btn" id="startLangBtn" onclick="startWithLang()">Select a language to continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GRAMMAR DETAIL SCREEN
+══════════════════════════════════════════ -->
+<div class="screen" id="s-grammar">
+  <div style="display:flex;flex-direction:column;flex:1;max-width:430px;width:100%;margin:0 auto;box-shadow:0 0 100px rgba(0,0,0,0.6);background:var(--void);min-height:100vh;">
+    <div class="lesson-header">
+      <button class="back-btn" onclick="goScreen('s-app')">‹</button>
+      <div class="lesson-header-info">
+        <h3 id="gramLessonTitle">Japanese Sentence Structure</h3>
+        <p>Grammar · Beginner A1 · <span id="gramLang">Japanese</span></p>
+      </div>
+    </div>
+    <div class="lesson-body" style="overflow-y:auto;flex:1;padding-bottom:30px;" id="gramLessonBody">
+
+      <!-- Grammar Video -->
+      <div class="grammar-video" onclick="toggleGramVideo(this)">
+        <div class="gv-animation" id="gramVideoAnim">
+          <div class="gv-bar"></div><div class="gv-bar"></div>
+          <div class="gv-bar"></div><div class="gv-bar"></div>
+          <div class="gv-bar"></div><div class="gv-bar"></div>
+        </div>
+        <div class="gv-label">▶ Grammar Video Lesson</div>
+        <div class="gv-sublabel" id="gramVidSub">Tap to play · <span id="gramVideoTitle">Japanese Sentence Order</span></div>
+        <div class="gv-playing-badge" id="gramBadge">📽 VIDEO</div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="exp-section">
+        <div class="exp-title">What You'll Learn</div>
+        <div class="exp-text" id="gramExpText">
+          In Japanese, sentences follow a <strong>Subject → Object → Verb</strong> order — the opposite of English. This is called <strong>SOV word order</strong>. Understanding this single rule unlocks how to build any basic sentence.
+        </div>
+      </div>
+
+      <!-- Structure Diagram -->
+      <div class="exp-section">
+        <div class="exp-title">Sentence Structure</div>
+        <div class="structure-diagram" id="gramStructure">
+          <div class="sd-row">
+            <span class="sd-label">English:</span>
+            <span class="sd-value">I <span class="sd-highlight">eat</span> sushi</span>
+            <span class="sd-eng">SVO order</span>
+          </div>
+          <div class="sd-row">
+            <span class="sd-label">Japanese:</span>
+            <span class="sd-value">私は寿司を<span class="sd-highlight">食べます</span></span>
+            <span class="sd-eng">SOV order</span>
+          </div>
+          <div class="sd-row">
+            <span class="sd-label">Read as:</span>
+            <span class="sd-value">I sushi <span class="sd-highlight">eat</span></span>
+            <span class="sd-eng">Verb comes last</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Examples -->
+      <div class="exp-section">
+        <div class="exp-title">Examples with Breakdown</div>
+        <div id="gramExamples">
+          <div class="example-box fade-up">
+            <div class="ex-target">私は水を飲みます。</div>
+            <div class="ex-romaji">Watashi wa mizu wo nomimasu.</div>
+            <div class="ex-english">I drink water.</div>
+            <div class="ex-breakdown">
+              <div class="ex-part"><div class="ep-word">私は</div><div class="ep-role">Subject (I)</div></div>
+              <div class="ex-part"><div class="ep-word">水を</div><div class="ep-role">Object (water)</div></div>
+              <div class="ex-part"><div class="ep-word">飲みます</div><div class="ep-role">Verb (drink)</div></div>
+            </div>
+          </div>
+          <div class="example-box fade-up">
+            <div class="ex-target">彼女は本を読みます。</div>
+            <div class="ex-romaji">Kanojo wa hon wo yomimasu.</div>
+            <div class="ex-english">She reads a book.</div>
+            <div class="ex-breakdown">
+              <div class="ex-part"><div class="ep-word">彼女は</div><div class="ep-role">Subject (she)</div></div>
+              <div class="ex-part"><div class="ep-word">本を</div><div class="ep-role">Object (book)</div></div>
+              <div class="ex-part"><div class="ep-word">読みます</div><div class="ep-role">Verb (reads)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- English Comparison -->
+      <div class="compare-section">
+        <div class="cs-title">📊 Session Complete — English vs Target Language</div>
+        <div class="cs-compare-row" id="gramCompareRow">
+          <div class="csr-box csr-eng">
+            <div class="csr-lang">🇬🇧 English</div>
+            <div class="csr-item">• Verb comes <em style="color:var(--sky)">second</em></div>
+            <div class="csr-item">• Subject → Verb → Object</div>
+            <div class="csr-item">• "I <em style="color:var(--sky)">eat</em> sushi"</div>
+            <div class="csr-item">• No sentence-end particles</div>
+          </div>
+          <div class="csr-box csr-target">
+            <div class="csr-lang" id="compareLangLabel">🇯🇵 Japanese</div>
+            <div class="csr-item" id="ci1">• Verb comes <em style="color:var(--iris)">last</em></div>
+            <div class="csr-item" id="ci2">• Subject → Object → Verb</div>
+            <div class="csr-item" id="ci3">• "私は寿司を<em style="color:var(--iris)">食べます</em>"</div>
+            <div class="csr-item" id="ci4">• Particles は を が mark roles</div>
+          </div>
+        </div>
+        <div class="csr-note" id="gramNote">
+          💡 <strong>Key takeaway:</strong> In Japanese, the verb always arrives at the end — like a surprise ending. Once you feel this rhythm, building sentences becomes natural.
+        </div>
+      </div>
+
+      <!-- Pronunciation audio -->
+      <div class="exp-section">
+        <div class="exp-title">🎙️ Native Pronunciation</div>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="gramAudio">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;" onclick="playWord('私は水を飲みます','ja-JP')">
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;color:var(--bright);">私は水を飲みます</div>
+              <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Watashi wa mizu wo nomimasu</div>
+            </div>
+            <button style="background:rgba(124,111,247,0.2);border:1px solid rgba(124,111,247,0.3);border-radius:10px;padding:8px 12px;color:var(--iris);cursor:pointer;font-size:0.8rem;font-weight:600;">🔊 Play</button>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;" onclick="playWord('彼女は本を読みます','ja-JP')">
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;color:var(--bright);">彼女は本を読みます</div>
+              <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Kanojo wa hon wo yomimasu</div>
+            </div>
+            <button style="background:rgba(124,111,247,0.2);border:1px solid rgba(124,111,247,0.3);border-radius:10px;padding:8px 12px;color:var(--iris);cursor:pointer;font-size:0.8rem;font-weight:600;">🔊 Play</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="next-lesson-btn" onclick="goScreen('s-app')">✓ Complete Lesson · Next: Particles →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APP SCREEN
+══════════════════════════════════════════ -->
+<div class="screen" id="s-app">
+  <div style="display:flex;flex-direction:column;flex:1;max-width:430px;width:100%;margin:0 auto;box-shadow:0 0 100px rgba(0,0,0,0.6);background:var(--void);min-height:100vh;">
+
+    <!-- Top bar -->
+    <div class="app-topbar">
+      <div class="app-logo"><span>A.L.I.A</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="level-chip"><div class="level-dot"></div><span id="currentLangChip">Japanese · A1</span></div>
+        <button style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px 10px;color:var(--soft);cursor:pointer;font-size:0.75rem;font-weight:600;" onclick="goScreen('s-langpick')">🌍</button>
+      </div>
+    </div>
+
+    <!-- Tab pages -->
+    <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+
+      <!-- HOME -->
+      <div class="tpage on" id="tp-home" style="overflow-y:auto;flex:1;">
+
+        <div class="welcome-card">
+          <div class="wc-label">A.L.I.A · Session Ready</div>
+          <div class="wc-title" id="homeTitle">Learning Japanese</div>
+          <div class="wc-sub">No streaks. No pressure. Just real language learning — at your pace, free forever.</div>
+          <div class="wc-lang-row">
+            <div class="lang-flag picked" id="homeLangFlag">🇯🇵 Japanese</div>
+            <button class="btn btn-aurora btn-sm" onclick="switchTab('chat')">💬 Talk to A.L.I.A</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-c"><div class="sv" id="statWords">48</div><div class="sl">Words Learned</div></div>
+          <div class="stat-c"><div class="sv" id="statMin">3.2h</div><div class="sl">Study Time</div></div>
+          <div class="stat-c"><div class="sv" id="statLevel">A1</div><div class="sl">CEFR Level</div></div>
+        </div>
+
+        <div class="sec-head">
+          <h3>Continue Learning</h3>
+          <a onclick="switchTab('grammar')">See all</a>
+        </div>
+
+        <div class="mod-card" onclick="goScreen('s-grammar')">
+          <div class="mod-icon" style="background:rgba(124,111,247,0.15);">📐</div>
+          <div class="mod-body">
+            <div class="mod-title" id="modGram1">Japanese Sentence Structure</div>
+            <div class="mod-meta">Grammar · A1 · Video + English Comparison</div>
+            <div class="mod-tags">
+              <span class="mtag" style="background:rgba(124,111,247,0.15);color:var(--iris);">Grammar</span>
+              <span class="mtag" style="background:rgba(0,229,192,0.1);color:var(--aurora);">Video</span>
+              <span class="mtag" style="background:rgba(79,195,247,0.1);color:var(--sky);">English Compare</span>
+            </div>
+          </div>
+          <div class="mod-arrow">›</div>
+        </div>
+
+        <div class="mod-card" onclick="switchTab('vocab')">
+          <div class="mod-icon" style="background:rgba(0,229,192,0.1);">🗂️</div>
+          <div class="mod-body">
+            <div class="mod-title" id="modVocab1">Daily Vocabulary · Food & Drink</div>
+            <div class="mod-meta">Vocabulary · 12 words · Native audio · Video</div>
+            <div class="mod-tags">
+              <span class="mtag" style="background:rgba(0,229,192,0.1);color:var(--aurora);">Vocabulary</span>
+              <span class="mtag" style="background:rgba(245,200,66,0.1);color:var(--gold);">Native Audio</span>
+            </div>
+          </div>
+          <div class="mod-arrow">›</div>
+        </div>
+
+        <div class="mod-card" onclick="switchTab('dialogue')">
+          <div class="mod-icon" style="background:rgba(255,107,157,0.1);">🎬</div>
+          <div class="mod-body">
+            <div class="mod-title">Dialogue Video · At the Restaurant</div>
+            <div class="mod-meta">Dialogue · Real conversation · With subtitles</div>
+            <div class="mod-tags">
+              <span class="mtag" style="background:rgba(255,107,157,0.1);color:var(--rose);">Dialogue</span>
+              <span class="mtag" style="background:rgba(245,200,66,0.1);color:var(--gold);">Video</span>
+            </div>
+          </div>
+          <div class="mod-arrow">›</div>
+        </div>
+
+        <div class="mod-card" onclick="switchTab('chat')">
+          <div class="mod-icon" style="background:rgba(124,111,247,0.12);">🤖</div>
+          <div class="mod-body">
+            <div class="mod-title">Talk with A.L.I.A</div>
+            <div class="mod-meta">AI Conversation · Build vocabulary naturally</div>
+            <div class="mod-tags">
+              <span class="mtag" style="background:rgba(124,111,247,0.15);color:var(--iris);">AI Tutor</span>
+              <span class="mtag" style="background:rgba(0,229,192,0.1);color:var(--aurora);">Free Talk</span>
+            </div>
+          </div>
+          <div class="mod-arrow">›</div>
+        </div>
+      </div>
+
+      <!-- GRAMMAR TAB -->
+      <div class="tpage" id="tp-grammar" style="overflow-y:auto;flex:1;">
+        <div class="grammar-hero">
+          <div class="gh-label">Grammar Module</div>
+          <div class="gh-title" id="gramTabTitle">Japanese Grammar</div>
+          <div class="gh-sub">Deep explanations. Logical structure. Every session ends with a full English comparison so you understand — not just memorize.</div>
+          <button class="btn btn-iris btn-sm" onclick="goScreen('s-grammar')">▶ Start Video Lesson</button>
+        </div>
+
+        <!-- Video lessons -->
+        <div class="sec-head"><h3>Grammar Videos</h3><a>All</a></div>
+
+        <div class="video-card" onclick="goScreen('s-grammar')">
+          <div class="video-thumb" style="background:linear-gradient(135deg,rgba(124,111,247,0.15),rgba(124,111,247,0.05));">
+            <span style="font-size:2.5rem;">📐</span>
+            <div class="vt-play">▶</div>
+          </div>
+          <div class="video-info">
+            <div class="vi-type">Grammar · A1</div>
+            <div class="vi-title" id="vid1Title">Sentence Structure (SOV Order)</div>
+            <div class="vi-meta" id="vid1Meta">8 min · Japanese · With English comparison</div>
+          </div>
+        </div>
+
+        <div class="video-card" onclick="goScreen('s-grammar')">
+          <div class="video-thumb" style="background:linear-gradient(135deg,rgba(0,229,192,0.1),rgba(0,229,192,0.03));">
+            <span style="font-size:2.5rem;">🔤</span>
+            <div class="vt-play" style="background:rgba(0,229,192,0.8);">▶</div>
+          </div>
+          <div class="video-info">
+            <div class="vi-type" style="color:var(--aurora);">Grammar · A1</div>
+            <div class="vi-title" id="vid2Title">Particles は, が, を Explained</div>
+            <div class="vi-meta">10 min · Animated · Compared to English prepositions</div>
+          </div>
+        </div>
+
+        <!-- Written lessons -->
+        <div class="sec-head"><h3>Written Lessons</h3></div>
+
+        <div class="gram-lesson" onclick="goScreen('s-grammar')">
+          <div class="gl-top">
+            <div class="gl-title" id="writ1Title">Hiragana — The First Script</div>
+            <span class="gl-badge" style="background:rgba(0,229,192,0.1);color:var(--aurora);">Basics</span>
+          </div>
+          <div class="rule-box">
+            <div class="rb-label">Core Rule</div>
+            <div class="rb-rule">Hiragana has <code>46 characters</code>. Each one represents a <code>syllable</code>, not a single letter like English. <code>あ = a</code>, <code>い = i</code>, <code>う = u</code>...</div>
+          </div>
+          <div class="eng-compare">
+            <div class="ec-label">🇬🇧 vs 🇯🇵 — After This Session</div>
+            <div class="ec-row">
+              <div class="ec-lang">English</div>
+              <div class="ec-text">26 letters, each = 1 sound</div>
+            </div>
+            <div class="ec-row">
+              <div class="ec-lang">Japanese</div>
+              <div class="ec-text"><em>46 hiragana</em>, each = 1 syllable (ka, ki, ku, ke, ko)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gram-lesson">
+          <div class="gl-top">
+            <div class="gl-title">Greetings & Politeness Levels</div>
+            <span class="gl-badge" style="background:rgba(245,200,66,0.1);color:var(--gold);">Culture</span>
+          </div>
+          <div class="rule-box">
+            <div class="rb-label">Core Rule</div>
+            <div class="rb-rule">Japanese has <code>formal</code> and <code>informal</code> speech. <code>です/ます</code> forms are polite. Drop them for casual friends. Context decides which to use.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOCABULARY TAB -->
+      <div class="tpage" id="tp-vocab" style="overflow-y:auto;flex:1;">
+        <div class="vocab-hero">
+          <div class="vh-title">🗂️ Vocabulary with Video</div>
+          <div class="vh-sub">Every word comes with native audio, a video example, and a real sentence so you learn words the way they're actually used.</div>
+          <button class="btn btn-aurora btn-sm">▶ Play All Vocabulary Videos</button>
+        </div>
+
+        <div class="filter-row">
+          <button class="fbtn on">All</button>
+          <button class="fbtn">Food 🍜</button>
+          <button class="fbtn">Greetings 👋</button>
+          <button class="fbtn">Numbers 🔢</button>
+          <button class="fbtn">Travel ✈️</button>
+          <button class="fbtn">Body 🧍</button>
+        </div>
+
+        <!-- Vocab video cards -->
+        <div class="vv-card" id="vc-taberu">
+          <div class="vv-thumb" style="background:linear-gradient(135deg,rgba(0,229,192,0.1),var(--void));">
+            <div class="vv-word-display">
+              <div class="vvw-target" id="vvw1">食べる</div>
+              <div class="vvw-arrow">↕</div>
+              <div class="vvw-english" id="vvw1e">to eat</div>
+            </div>
+            <div class="vv-play">🔊</div>
+          </div>
+          <div class="vv-info">
+            <div class="vv-info-row">
+              <div class="vvi-word" id="vviw1">食べる (taberu)</div>
+              <div class="vvi-type">Verb · Group 2</div>
+            </div>
+            <div class="vv-examples">
+              <div class="vve-title">Example Sentences</div>
+              <div class="vve-row">
+                <div class="vve-native" id="vve1">私はりんごを食べる。</div>
+                <div class="vve-english">I eat an apple.</div>
+              </div>
+              <div class="vve-row">
+                <div class="vve-native">毎日ご飯を食べます。</div>
+                <div class="vve-english">I eat rice every day.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="vv-card">
+          <div class="vv-thumb" style="background:linear-gradient(135deg,rgba(124,111,247,0.1),var(--void));">
+            <div class="vv-word-display">
+              <div class="vvw-target">飲む</div>
+              <div class="vvw-arrow">↕</div>
+              <div class="vvw-english" style="color:var(--iris);">to drink</div>
+            </div>
+            <div class="vv-play" style="background:rgba(124,111,247,0.2);border-color:rgba(124,111,247,0.4);color:var(--iris);">🔊</div>
+          </div>
+          <div class="vv-info">
+            <div class="vv-info-row">
+              <div class="vvi-word">飲む (nomu)</div>
+              <div class="vvi-type">Verb · Group 1</div>
+            </div>
+            <div class="vv-examples">
+              <div class="vve-title">Example Sentences</div>
+              <div class="vve-row">
+                <div class="vve-native">水を飲みます。</div>
+                <div class="vve-english">I drink water.</div>
+              </div>
+              <div class="vve-row">
+                <div class="vve-native">コーヒーを飲む？</div>
+                <div class="vve-english">Do you drink coffee?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="vv-card">
+          <div class="vv-thumb" style="background:linear-gradient(135deg,rgba(255,107,157,0.1),var(--void));">
+            <div class="vv-word-display">
+              <div class="vvw-target">美味しい</div>
+              <div class="vvw-arrow">↕</div>
+              <div class="vvw-english" style="color:var(--rose);">delicious</div>
+            </div>
+            <div class="vv-play" style="background:rgba(255,107,157,0.2);border-color:rgba(255,107,157,0.4);color:var(--rose);">🔊</div>
+          </div>
+          <div class="vv-info">
+            <div class="vv-info-row">
+              <div class="vvi-word">美味しい (oishii)</div>
+              <div class="vvi-type">Adjective · い type</div>
+            </div>
+            <div class="vv-examples">
+              <div class="vve-title">Example Sentences</div>
+              <div class="vve-row">
+                <div class="vve-native">これは美味しい！</div>
+                <div class="vve-english">This is delicious!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio tap handler -->
+        <script>
+          document.querySelectorAll('.vv-card').forEach(card => {
+            card.querySelector('.vv-play').addEventListener('click', (e) => {
+              e.stopPropagation();
+              const word = card.querySelector('.vvw-target').textContent;
+              playWord(word, currentLang === 'Japanese' ? 'ja-JP' :
+                currentLang === 'French' ? 'fr-FR' :
+                currentLang === 'Spanish' ? 'es-ES' :
+                currentLang === 'German' ? 'de-DE' : 'en-US');
+            });
+          });
+        </script>
+      </div>
+
+      <!-- AI CHAT TAB -->
+      <div class="tpage" id="tp-chat" style="overflow-y:auto;flex:1;">
+
+        <div class="chat-header">
+          <div class="alia-avatar">🤖<div class="avatar-pulse"></div></div>
+          <div class="chat-header-info">
+            <h3>A.L.I.A — Your Language Tutor</h3>
+            <p>Talking in <span id="chatLangLabel">Japanese</span> · Free conversation</p>
+          </div>
+        </div>
+
+        <!-- Language select for chat -->
+        <div class="chat-lang-row" id="chatLangRow">
+          <button class="cl-btn on" onclick="setChatLang(this,'Japanese','ja-JP')">🇯🇵 JA</button>
+          <button class="cl-btn" onclick="setChatLang(this,'French','fr-FR')">🇫🇷 FR</button>
+          <button class="cl-btn" onclick="setChatLang(this,'Spanish','es-ES')">🇪🇸 ES</button>
+          <button class="cl-btn" onclick="setChatLang(this,'German','de-DE')">🇩🇪 DE</button>
+          <button class="cl-btn" onclick="setChatLang(this,'Korean','ko-KR')">🇰🇷 KO</button>
+          <button class="cl-btn" onclick="setChatLang(this,'Hindi','hi-IN')">🇮🇳 HI</button>
+        </div>
+
+        <!-- Quick prompts -->
+        <div class="quick-prompts">
+          <button class="qp-btn" onclick="sendQuick('Teach me a greeting')">👋 Teach a greeting</button>
+          <button class="qp-btn" onclick="sendQuick('How do I order food?')">🍜 Order food</button>
+          <button class="qp-btn" onclick="sendQuick('Explain a grammar rule')">📐 Grammar rule</button>
+          <button class="qp-btn" onclick="sendQuick('Give me 5 new words')">📖 5 new words</button>
+          <button class="qp-btn" onclick="sendQuick('Correct my sentence')">✏️ Correct me</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg fade-up">
+            <div class="msg-avatar">🤖</div>
+            <div class="msg-bubble">
+              <div class="mb-text">こんにちは！I'm A.L.I.A, your language assistant. I'm here to help you learn <strong>Japanese</strong> through real conversation — no pressure, no tests. Just talk to me!</div>
+              <div class="mb-translation">Hello! I'm A.L.I.A, your language assistant.</div>
+              <div class="mb-tip">💡 Tip: Try typing a sentence and I'll correct it gently and explain why.</div>
+            </div>
+          </div>
+          <div class="msg fade-up">
+            <div class="msg-avatar">🤖</div>
+            <div class="msg-bubble">
+              <div class="mb-text">What would you like to learn today? You can ask me anything — vocabulary, grammar, pronunciation, or just have a conversation!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="msg typing-indicator" id="typingIndicator">
+          <div class="msg-avatar">🤖</div>
+          <div class="msg-bubble">
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chatInput" placeholder="Type a message or question..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
+            oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+          <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+
+      <!-- DIALOGUE TAB -->
+      <div class="tpage" id="tp-dialogue" style="overflow-y:auto;flex:1;">
+        <div class="dialogue-intro">
+          <div class="di-label">Dialogue Videos</div>
+          <div class="di-title">Real Conversations</div>
+          <div class="di-sub">Watch and listen to full dialogues between native speakers. Every line shown in the target language and English — so you absorb naturally.</div>
+        </div>
+
+        <div class="sec-head"><h3>Available Dialogues</h3><a>All</a></div>
+
+        <div class="dialogue-card" onclick="openDialogue(this)">
+          <div class="dc-top">
+            <div class="dc-topic" id="dial1Title">🍜 At the Restaurant</div>
+            <div class="dc-level">A1 Beginner</div>
+          </div>
+          <div class="dialogue-lines">
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-a">TANAKA</div>
+              <div class="dl-content">
+                <div class="dl-text" id="dial1l1">いらっしゃいませ！何名様ですか？</div>
+                <div class="dl-eng">Welcome! How many people?</div>
+              </div>
+            </div>
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-b">YUKI</div>
+              <div class="dl-content">
+                <div class="dl-text" id="dial1l2">二人です。窓際の席をお願いします。</div>
+                <div class="dl-eng">Two people. A window seat, please.</div>
+              </div>
+            </div>
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-a">TANAKA</div>
+              <div class="dl-content">
+                <div class="dl-text">かしこまりました。こちらへどうぞ。</div>
+                <div class="dl-eng">Certainly. This way, please.</div>
+              </div>
+            </div>
+          </div>
+          <div class="dc-footer">
+            <div class="dc-tags">
+              <span class="mtag" style="background:rgba(255,107,157,0.1);color:var(--rose);">Dialogue</span>
+              <span class="mtag" style="background:rgba(245,200,66,0.1);color:var(--gold);">Native Audio</span>
+            </div>
+            <button class="dc-watch-btn" onclick="playDialogue(event)">▶ Play Video</button>
+          </div>
+        </div>
+
+        <div class="dialogue-card">
+          <div class="dc-top">
+            <div class="dc-topic">🚉 At the Train Station</div>
+            <div class="dc-level">A1 Beginner</div>
+          </div>
+          <div class="dialogue-lines">
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-a">KENJI</div>
+              <div class="dl-content">
+                <div class="dl-text">すみません、東京駅はどこですか？</div>
+                <div class="dl-eng">Excuse me, where is Tokyo Station?</div>
+              </div>
+            </div>
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-b">PERSON</div>
+              <div class="dl-content">
+                <div class="dl-text">まっすぐ行って、右に曲がってください。</div>
+                <div class="dl-eng">Go straight and turn right.</div>
+              </div>
+            </div>
+          </div>
+          <div class="dc-footer">
+            <div class="dc-tags">
+              <span class="mtag" style="background:rgba(255,107,157,0.1);color:var(--rose);">Dialogue</span>
+              <span class="mtag" style="background:rgba(79,195,247,0.1);color:var(--sky);">Directions</span>
+            </div>
+            <button class="dc-watch-btn" onclick="playDialogue(event)">▶ Play Video</button>
+          </div>
+        </div>
+
+        <div class="dialogue-card">
+          <div class="dc-top">
+            <div class="dc-topic">🏠 Introducing Yourself</div>
+            <div class="dc-level">A1 Beginner</div>
+          </div>
+          <div class="dialogue-lines">
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-a">AIKO</div>
+              <div class="dl-content">
+                <div class="dl-text">はじめまして。私はアイコです。</div>
+                <div class="dl-eng">Nice to meet you. I'm Aiko.</div>
+              </div>
+            </div>
+            <div class="dl-line">
+              <div class="dl-speaker dl-sp-b">RIKU</div>
+              <div class="dl-content">
+                <div class="dl-text">はじめまして。リクです。どうぞよろしく。</div>
+                <div class="dl-eng">Nice to meet you. I'm Riku. Pleased to meet you.</div>
+              </div>
+            </div>
+          </div>
+          <div class="dc-footer">
+            <div class="dc-tags">
+              <span class="mtag" style="background:rgba(255,107,157,0.1);color:var(--rose);">Dialogue</span>
+              <span class="mtag" style="background:rgba(124,111,247,0.12);color:var(--iris);">Introductions</span>
+            </div>
+            <button class="dc-watch-btn" onclick="playDialogue(event)">▶ Play Video</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end tab pages -->
+
+    <!-- Bottom Nav -->
+    <div class="app-nav">
+      <button class="anav-btn on" onclick="switchTab('home')"><span class="ni">🏠</span>Home</button>
+      <button class="anav-btn" onclick="switchTab('grammar')"><span class="ni">📐</span>Grammar</button>
+      <button class="anav-btn" onclick="switchTab('vocab')"><span class="ni">🗂️</span>Vocab</button>
+      <button class="anav-btn" onclick="switchTab('chat')"><span class="ni">🤖</span>A.L.I.A</button>
+      <button class="anav-btn" onclick="switchTab('dialogue')"><span class="ni">🎬</span>Dialogue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────
+let currentLang = 'Japanese';
+let currentLangCode = 'ja-JP';
+let chatLangCode = 'ja-JP';
+let selectedLang = null;
+let selectedLangEl = null;
+
+// ── SCREEN NAVIGATION ────────────────────────────
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── TAB NAVIGATION ───────────────────────────────
+function switchTab(name){
+  document.querySelectorAll('.anav-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tpage').forEach(p=>p.classList.remove('on'));
+  const map={home:0,grammar:1,vocab:2,chat:3,dialogue:4};
+  document.querySelectorAll('.anav-btn')[map[name]].classList.add('on');
+  document.getElementById('tp-'+name).classList.add('on');
+}
+
+// ── FILTER BUTTONS ───────────────────────────────
+document.querySelectorAll('.fbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+  });
+});
+
+// ── LANGUAGE PICKER ──────────────────────────────
+function pickLang(el, name, native, flag){
+  if(selectedLangEl) selectedLangEl.classList.remove('selected');
+  el.classList.add('selected');
+  selectedLang = {name, native, flag};
+  selectedLangEl = el;
+  const btn = document.getElementById('startLangBtn');
+  btn.textContent = `Start Learning ${flag} ${name} →`;
+  btn.style.background = 'linear-gradient(135deg,var(--iris),var(--aurora))';
+}
+
+function filterLangs(q){
+  document.querySelectorAll('.lang-item').forEach(item=>{
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function startWithLang(){
+  if(!selectedLang){ alert('Please select a language first!'); return; }
+  currentLang = selectedLang.name;
+  currentLangCode = getLangCode(selectedLang.name);
+  chatLangCode = currentLangCode;
+  applyLang(selectedLang);
+  goScreen('s-app');
+}
+
+function getLangCode(name){
+  const map={Japanese:'ja-JP',French:'fr-FR',Spanish:'es-ES',German:'de-DE',Korean:'ko-KR',
+    Hindi:'hi-IN',Mandarin:'zh-CN',Italian:'it-IT',Portuguese:'pt-PT',Russian:'ru-RU',
+    Arabic:'ar-SA',Turkish:'tr-TR',Dutch:'nl-NL',Swahili:'sw-KE'};
+  return map[name]||'en-US';
+}
+
+// Language content data
+const langContent = {
+  Japanese:{
+    flag:'🇯🇵',level:'A1',
+    gramTitle:'Japanese Sentence Structure',
+    gramVideo:'Japanese Sentence Order (SOV)',
+    gramExp:'In Japanese, sentences follow a <strong>Subject → Object → Verb</strong> order — the opposite of English. Understanding this single rule unlocks how to build any basic sentence.',
+    words:['食べる · to eat','飲む · to drink','行く · to go','見る · to see'],
+    dialogLine1:'いらっしゃいませ！何名様ですか？',
+    dialogLine2:'二人です。窓際の席をお願いします。',
+    chatGreet:'こんにちは！I\'m A.L.I.A. Ready to learn Japanese together?',
+  },
+  French:{
+    flag:'🇫🇷',level:'A1',
+    gramTitle:'French Gender & Articles',
+    gramVideo:'Le, La, Les — French Articles Explained',
+    gramExp:'In French, every noun has a <strong>gender</strong> — masculine or feminine. The article (the/a) changes to match: <strong>le</strong> (masc), <strong>la</strong> (fem), <strong>les</strong> (plural). This is the foundation of French.',
+    words:['manger · to eat','boire · to drink','aller · to go','voir · to see'],
+    dialogLine1:'Bonjour ! Une table pour combien de personnes ?',
+    dialogLine2:'Pour deux, s\'il vous plaît. Près de la fenêtre.',
+    chatGreet:'Bonjour ! Je m\'appelle A.L.I.A. Prêt à apprendre le français ?',
+  },
+  Spanish:{
+    flag:'🇪🇸',level:'A1',
+    gramTitle:'Spanish Verb Conjugation',
+    gramVideo:'Present Tense — Regular Verbs',
+    gramExp:'Spanish verbs change their endings based on <strong>who is doing the action</strong>. For -AR verbs: yo como, tú comes, él come. Once you learn the pattern, it applies to hundreds of verbs.',
+    words:['comer · to eat','beber · to drink','ir · to go','ver · to see'],
+    dialogLine1:'¡Bienvenidos! ¿Cuántas personas son?',
+    dialogLine2:'Somos dos. Una mesa junto a la ventana, por favor.',
+    chatGreet:'¡Hola! Soy A.L.I.A. ¿Listo para aprender español?',
+  },
+  German:{
+    flag:'🇩🇪',level:'A1',
+    gramTitle:'German Article Cases',
+    gramVideo:'Der, Die, Das — German Gender System',
+    gramExp:'Every German noun has a <strong>grammatical gender</strong>: der (masculine), die (feminine), das (neuter). These change depending on the noun\'s role in the sentence (nominative, accusative, dative).',
+    words:['essen · to eat','trinken · to drink','gehen · to go','sehen · to see'],
+    dialogLine1:'Willkommen! Für wie viele Personen?',
+    dialogLine2:'Für zwei, bitte. Einen Tisch am Fenster.',
+    chatGreet:'Hallo! Ich bin A.L.I.A. Bereit, Deutsch zu lernen?',
+  },
+};
+
+function applyLang(lang){
+  const n = lang.name;
+  const d = langContent[n] || langContent.Japanese;
+  // Home
+  document.getElementById('homeTitle').textContent = `Learning ${n}`;
+  document.getElementById('homeLangFlag').textContent = `${lang.flag} ${n}`;
+  document.getElementById('currentLangChip').textContent = `${n} · ${d.level}`;
+  // Grammar
+  document.getElementById('gramLessonTitle').textContent = d.gramTitle;
+  document.getElementById('gramLang').textContent = n;
+  document.getElementById('gramTabTitle').textContent = `${n} Grammar`;
+  document.getElementById('gramExpText').innerHTML = d.gramExp;
+  document.getElementById('gramVideoTitle').textContent = d.gramVideo;
+  document.getElementById('vid1Title').textContent = d.gramTitle;
+  document.getElementById('vid1Meta').textContent = `8 min · ${n} · With English comparison`;
+  document.getElementById('vid2Title').textContent = d.gramVideo;
+  document.getElementById('modGram1').textContent = d.gramTitle;
+  // Compare section
+  document.getElementById('compareLangLabel').textContent = `${lang.flag} ${n}`;
+  // Dialogue
+  if(d.dialogLine1){
+    const d1 = document.getElementById('dial1l1');
+    const d2 = document.getElementById('dial1l2');
+    if(d1) d1.textContent = d.dialogLine1;
+    if(d2) d2.textContent = d.dialogLine2;
+    const dt = document.getElementById('dial1Title');
+    if(dt) dt.textContent = `${n === 'French' ? '🥐' : n === 'Spanish' ? '🥘' : n === 'German' ? '🥨' : '🍜'} At the Restaurant`;
+  }
+  // Chat
+  document.getElementById('chatLangLabel').textContent = n;
+  // Reset chat
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = `
+    <div class="msg fade-up">
+      <div class="msg-avatar">🤖</div>
+      <div class="msg-bubble">
+        <div class="mb-text">${d.chatGreet}</div>
+        <div class="mb-tip">💡 I'll teach you vocabulary in context, correct your sentences, and explain grammar clearly — all compared to English.</div>
+      </div>
+    </div>`;
+}
+
+// ── GRAMMAR VIDEO TOGGLE ─────────────────────────
+let gramVideoPlaying = false;
+function toggleGramVideo(el){
+  gramVideoPlaying = !gramVideoPlaying;
+  const anim = document.getElementById('gramVideoAnim');
+  const badge = document.getElementById('gramBadge');
+  const sub = document.getElementById('gramVidSub');
+  if(gramVideoPlaying){
+    anim.style.opacity='1';
+    badge.textContent='▶ PLAYING';
+    badge.style.background='rgba(0,229,192,0.2)';
+    badge.style.borderColor='rgba(0,229,192,0.4)';
+    badge.style.color='var(--aurora)';
+    sub.innerHTML = '⏸ Tap to pause';
+    // Play audio of title
+    const title = document.getElementById('gramVideoTitle').textContent;
+    playWord(title.split('(')[0].trim(), currentLangCode);
+  } else {
+    badge.textContent='📽 VIDEO';
+    badge.style.background='rgba(124,111,247,0.2)';
+    badge.style.borderColor='rgba(124,111,247,0.4)';
+    badge.style.color='var(--iris)';
+    sub.innerHTML = `Tap to play · <span id="gramVideoTitle">${document.getElementById('gramVidSub').querySelector('span')?.textContent||''}</span>`;
+  }
+}
+
+// ── DIALOGUE PLAYER ──────────────────────────────
+function playDialogue(e){
+  e.stopPropagation();
+  const card = e.target.closest('.dialogue-card');
+  const lines = card.querySelectorAll('.dl-text');
+  const btn = e.target;
+  btn.textContent = '⏸ Playing...';
+  btn.style.background = 'var(--iris)';
+  btn.style.color = '#fff';
+  let i = 0;
+  function playNext(){
+    if(i >= lines.length){ btn.textContent='▶ Play Video'; btn.style.background=''; btn.style.color=''; return; }
+    lines[i].style.color = 'var(--aurora)';
+    if(i > 0) lines[i-1].style.color = '';
+    playWord(lines[i].textContent, currentLangCode);
+    i++;
+    setTimeout(playNext, 2800);
+  }
+  playNext();
+}
+
+function openDialogue(card){}
+
+// ── NATIVE AUDIO ─────────────────────────────────
+function playWord(text, code){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = code || currentLangCode;
+  utt.rate = 0.82;
+  utt.pitch = 1.0;
+  window.speechSynthesis.speak(utt);
+}
+
+// ── AI CHAT ──────────────────────────────────────
+let chatHistory = [];
+let chatLang = 'Japanese';
+
+function setChatLang(btn, name, code){
+  document.querySelectorAll('.cl-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  chatLang = name;
+  chatLangCode = code;
+  document.getElementById('chatLangLabel').textContent = name;
+}
+
+function sendQuick(text){
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+async function sendMessage(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+
+  appendMsg(text, 'me');
+  chatHistory.push({role:'user', content:text});
+
+  // Show typing
+  document.getElementById('typingIndicator').classList.add('show');
+  scrollChat();
+
+  try {
+    const systemPrompt = `You are A.L.I.A (Adaptive Language Intelligence Assistant), a warm, patient, expert language tutor helping someone learn ${chatLang}. 
+
+Rules:
+1. Always respond helpfully about ${chatLang} language learning
+2. When teaching words/phrases, show them in ${chatLang} script + romanization (if applicable) + English meaning
+3. Gently correct any mistakes the user makes and explain WHY (comparing to English structure)
+4. After teaching something, always compare it to how English works so the user truly understands
+5. Keep responses concise and conversational — you're a friendly tutor, not a textbook
+6. Format your response with these optional sections when relevant:
+   - Main teaching content
+   - [TRANSLATION]: English meaning of any ${chatLang} phrases you used
+   - [GRAMMAR TIP]: A brief grammar insight comparing ${chatLang} to English
+7. Never use streaks, points, or gamification language. Focus purely on learning.
+8. Speak naturally and encouragingly.`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system: systemPrompt,
+        messages: chatHistory
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.content?.find(c=>c.type==='text')?.text || 'Sorry, I had trouble responding. Please try again!';
+    chatHistory.push({role:'assistant', content: reply});
+
+    document.getElementById('typingIndicator').classList.remove('show');
+
+    // Parse reply for translation/tip
+    const parts = parseReply(reply);
+    appendALIAMsg(parts);
+
+  } catch(err) {
+    document.getElementById('typingIndicator').classList.remove('show');
+    // Fallback smart responses
+    const fallback = getFallback(text, chatLang);
+    chatHistory.push({role:'assistant', content: fallback.text});
+    appendALIAMsg(fallback);
+  }
+}
+
+function parseReply(text){
+  const translationMatch = text.match(/\[TRANSLATION\]:\s*(.+?)(?=\[|$)/s);
+  const tipMatch = text.match(/\[GRAMMAR TIP\]:\s*(.+?)(?=\[|$)/s);
+  let main = text
+    .replace(/\[TRANSLATION\]:.+?(?=\[|$)/s,'')
+    .replace(/\[GRAMMAR TIP\]:.+?(?=\[|$)/s,'')
+    .trim();
+  return {
+    text: main,
+    translation: translationMatch ? translationMatch[1].trim() : null,
+    tip: tipMatch ? tipMatch[1].trim() : null
+  };
+}
+
+function getFallback(input, lang){
+  const responses = {
+    Japanese:[
+      {text:"Great question! In Japanese, the most common greeting is:\n\nこんにちは (Konnichiwa) — Hello / Good afternoon\nおはようございます (Ohayou gozaimasu) — Good morning\nこんばんは (Konbanwa) — Good evening",translation:"Hello / Good afternoon",tip:"Japanese greetings change with time of day, just like English 'good morning' vs 'good afternoon'!"},
+      {text:"To order food in Japanese:\n\n〜をください (〜 wo kudasai) — Please give me 〜\n\nFor example:\nコーヒーをください。\n(Koohii wo kudasai)\n— Coffee, please.",translation:"Coffee, please.",tip:"The particle を (wo) marks the object — what you want. English says 'give me coffee', Japanese says 'coffee please-give'. Verb always last!"},
+      {text:"Here are 5 useful Japanese words:\n\n1. 水 (mizu) — water\n2. 食べる (taberu) — to eat\n3. 美味しい (oishii) — delicious\n4. ありがとう (arigatou) — thank you\n5. すみません (sumimasen) — excuse me",translation:"water, to eat, delicious, thank you, excuse me",tip:"Notice Japanese words often end in vowel sounds — this gives the language its musical, flowing rhythm!"},
+    ],
+    French:[
+      {text:"In French, greetings:\n\nBonjour — Hello / Good day\nBonsoir — Good evening\nSalut — Hi (casual)\nEnchanté(e) — Nice to meet you",translation:"Hello, Good evening, Hi, Nice to meet you",tip:"French drops 'good morning' as one phrase — 'Bonjour' covers morning and daytime. English has more time-specific greetings!"},
+      {text:"To order food in French:\n\nJe voudrais... (zhuh voo-DREH) — I would like...\n\nJe voudrais un café, s'il vous plaît.\n— I would like a coffee, please.",translation:"I would like a coffee, please.",tip:"French uses 'Je voudrais' (conditional tense) to be polite when ordering — it's more gentle than 'Je veux' (I want). English uses 'I'd like' the same way!"},
+      {text:"5 essential French words:\n\n1. eau (f) — water\n2. manger — to eat\n3. délicieux — delicious\n4. merci — thank you\n5. pardon — excuse me",translation:"water, to eat, delicious, thank you, excuse me",tip:"French nouns have gender! 'eau' is feminine (l'eau), 'café' is masculine (le café). Always learn the article with the noun!"},
+    ],
+    Spanish:[
+      {text:"Spanish greetings:\n\nHola — Hello\nBuenos días — Good morning\nBuenas tardes — Good afternoon\nBuenas noches — Good evening/night",translation:"Hello, Good morning, Good afternoon, Good evening",tip:"'Buenas' alone is an ultra-casual shortcut Spanish speakers use throughout the day — it works for any time!"},
+      {text:"Ordering food in Spanish:\n\nQuisiera... (kee-SYEH-rah) — I would like...\nMe pone... — Can you bring me...\n\nQuisiera un café con leche, por favor.\n— I would like a coffee with milk, please.",translation:"I would like a coffee with milk, please.",tip:"'Quisiera' is the polite conditional form. Compare to English 'I would like' — both use the conditional to be courteous!"},
+      {text:"5 key Spanish words:\n\n1. agua — water\n2. comer — to eat\n3. delicioso — delicious\n4. gracias — thank you\n5. perdón — excuse me",translation:"water, to eat, delicious, thank you, excuse me",tip:"Spanish is largely phonetic — words are pronounced exactly as written. Once you learn the sounds, reading Spanish is very straightforward!"},
+    ],
+    German:[
+      {text:"German greetings:\n\nHallo — Hello\nGuten Morgen — Good morning\nGuten Tag — Good day\nGuten Abend — Good evening\nTschüss — Bye (casual)",translation:"Hello, Good morning, Good day, Good evening, Bye",tip:"German greetings use 'Guten' (good) + time of day, exactly like English 'Good morning' — the structure is very similar!"},
+      {text:"Ordering in German:\n\nIch hätte gerne... (ikh HET-tuh GEHR-nuh) — I would like...\n\nIch hätte gerne einen Kaffee, bitte.\n— I would like a coffee, please.",translation:"I would like a coffee, please.",tip:"'Hätte gerne' = 'would like' — the conditional form for politeness. Notice 'einen' (a/one, masculine accusative) — German articles change based on grammar role!"},
+      {text:"5 important German words:\n\n1. Wasser — water\n2. essen — to eat\n3. lecker — delicious/tasty\n4. Danke — thank you\n5. Entschuldigung — excuse me",translation:"water, to eat, delicious, thank you, excuse me",tip:"German nouns are always capitalized — Wasser, Buch, Haus. This is a unique feature that makes it easy to spot nouns in a sentence!"},
+    ],
+  };
+  const arr = responses[lang] || responses.Japanese;
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function appendMsg(text, who){
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg fade-up ${who==='me'?'me':''}`;
+  if(who==='me'){
+    div.innerHTML=`<div class="msg-avatar" style="background:linear-gradient(135deg,var(--rose),var(--gold))">👤</div>
+      <div class="msg-bubble"><div class="mb-text">${escHtml(text)}</div></div>`;
+  }
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+function appendALIAMsg(parts){
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg fade-up';
+  let inner = `<div class="mb-text">${formatText(parts.text)}</div>`;
+  if(parts.translation) inner += `<div class="mb-translation">🌐 ${escHtml(parts.translation)}</div>`;
+  if(parts.tip) inner += `<div class="mb-tip">💡 ${escHtml(parts.tip)}</div>`;
+  div.innerHTML = `<div class="msg-avatar">🤖</div>
+    <div class="msg-bubble">${inner}<div class="msg-time">A.L.I.A · just now</div></div>`;
+  msgs.appendChild(div);
+  scrollChat();
+  // Speak the first native language content
+  if(parts.text){
+    const nativeMatch = parts.text.match(/[\u3040-\u9fff\uac00-\ud7af\u0600-\u06ff\u0400-\u04ff]+/);
+    if(nativeMatch) setTimeout(()=>playWord(nativeMatch[0], chatLangCode), 600);
+  }
+}
+
+function formatText(text){
+  return escHtml(text)
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`(.+?)`/g,'<code style="font-family:JetBrains Mono,monospace;background:rgba(124,111,247,0.15);color:var(--iris);padding:1px 5px;border-radius:4px;font-size:0.82em">$1</code>');
+}
+
+function escHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function scrollChat(){
+  const msgs = document.getElementById('chatMessages');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── GLYPH RING (Signature element) ───────────────
+const glyphs = ['あ','字','가','अ','ب','ñ','ж','漢','β','ა','ம','ش','й','한','ก','ሀ'];
+function buildRing(ringEl, count, radius){
+  for(let i=0;i<count;i++){
+    const g = document.createElement('div');
+    g.className='glyph';
+    const angle = (i/count)*360;
+    const rad = angle*(Math.PI/180);
+    const x = Math.cos(rad)*radius;
+    const y = Math.sin(rad)*radius;
+    g.style.transform=`translate(${x}px,${y}px)`;
+    g.style.fontSize = (0.8+Math.random()*0.6)+'rem';
+    g.style.opacity = (0.15+Math.random()*0.3).toFixed(2);
+    g.textContent = glyphs[i%glyphs.length];
+    ringEl.appendChild(g);
+  }
+}
+const r1 = document.getElementById('ring1');
+const r2 = document.getElementById('ring2');
+const r3 = document.getElementById('ring3');
+if(r1) buildRing(r1, 16, 340);
+if(r2) buildRing(r2, 12, 240);
+if(r3) buildRing(r3, 8, 155);
+
+// ── INIT ─────────────────────────────────────────
+// Default to Japanese
+applyLang({name:'Japanese', flag:'🇯🇵', native:'日本語'});
+</script>
+
+  <script>
+    // ── Register Service Worker (PWA offline support) ──
+    // Only register SW when running on a real hosted domain (not Claude preview)
+    if ('serviceWorker' in navigator) {
+      const isHosted = !window.location.hostname.includes('claudeusercontent') &&
+                       !window.location.hostname.includes('localhost') &&
+                        window.location.protocol === 'https:';
+      if (isHosted) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('[A.L.I.A] SW registered:', reg.scope))
+            .catch(err => console.warn('[A.L.I.A] SW failed:', err));
+        });
+      } else {
+        console.log('[A.L.I.A] Running in preview mode — SW skipped (works fine when hosted)');
+      }
+    }
+
+    // ── Install Prompt (Android "Add to Home Screen" banner) ──
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallBanner();
+    });
+
+    function showInstallBanner() {
+      const banner = document.getElementById('installBanner');
+      if (banner) banner.style.display = 'flex';
+    }
+
+    function installApp() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(result => {
+        if (result.outcome === 'accepted') {
+          document.getElementById('installBanner').style.display = 'none';
+          console.log('[A.L.I.A] App installed!');
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    function dismissBanner() {
+      const banner = document.getElementById('installBanner');
+      if (banner) banner.style.display = 'none';
+    }
+
+    // ── iOS install tip ──
+    function isIos() {
+      return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    }
+    function isInStandaloneMode() {
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    }
+    window.addEventListener('load', () => {
+      if (isIos() && !isInStandaloneMode()) {
+        setTimeout(() => {
+          document.getElementById('iosBanner')?.style && (document.getElementById('iosBanner').style.display = 'flex');
+        }, 3000);
+      }
+    });
+  </script>
+
+</body>
+</html>
