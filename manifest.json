@@ -1,0 +1,47 @@
+{
+  "name": "A.L.I.A — Adaptive Language Intelligence Assistant",
+  "short_name": "A.L.I.A",
+  "description": "Learn any language free — Native pronunciation, AI conversation, Grammar videos, Dialogue practice. No streaks. Pure learning.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07080f",
+  "theme_color": "#7c6ff7",
+  "lang": "en",
+  "scope": "/",
+  "categories": ["education", "language", "learning"],
+  "icons": [
+    { "src": "icons/icon-72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-128.png",  "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-144.png",  "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-152.png",  "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-384.png",  "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png",  "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Talk to A.L.I.A",
+      "short_name": "AI Chat",
+      "description": "Start an AI conversation lesson",
+      "url": "/index.html#chat",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Grammar Lessons",
+      "short_name": "Grammar",
+      "description": "Open grammar video lessons",
+      "url": "/index.html#grammar",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "label": "A.L.I.A Home Screen",
+      "sizes": "390x844",
+      "type": "image/png",
+      "src": "icons/screenshot.png"
+    }
+  ]
+}
